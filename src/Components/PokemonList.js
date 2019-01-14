@@ -7,39 +7,36 @@ const PokemonCollectionResource = createResource(() =>
 
 const PokemonPictureResource = createResource;
 
-function PokemonListItem(props) {
+function PokemonListItem({ id, name, onClick }) {
   return (
     <div
       className='pokemon-list-item'
-      onClick={() => props.onClick({ name: props.name, id: props.id })}
+      onClick={() => onClick({ name: name, id: id })}
     >
-      {props.children}
+      <img
+        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
+        alt={name}
+        width='128'
+        height='128'
+        style={{ imageRendering: 'pixelated' }}
+      />
+      <div className='pokemon-list-item__number'>{`#${id}`}</div>
+      <div className='pokemon-list-item__name'>{`${name}`}</div>
     </div>
   );
 }
 
 function PokemonList(props) {
+  const pokemonArray = PokemonCollectionResource.read().results.slice(0, 151);
   return (
     <div className='pokemon-list'>
-      {PokemonCollectionResource.read().results.map((pokemon, index) => (
+      {pokemonArray.map((pokemon, index) => (
         <PokemonListItem
           key={pokemon.name}
           name={pokemon.name}
           id={index + 1}
           onClick={props.onPokemonClick}
-        >
-          <Suspense fallback={'loading...'}>
-            <img
-              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index +
-                1}.png`}
-              alt={pokemon.name}
-              width='96'
-              height='96'
-            />
-          </Suspense>
-          <div className='pokemon-list-item__number'>{`#${index + 1}`}</div>
-          <div className='pokemon-list-item__name'>{`${pokemon.name}`}</div>
-        </PokemonListItem>
+        />
       ))}
     </div>
   );
