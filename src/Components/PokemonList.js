@@ -1,8 +1,12 @@
 import React, { useState, useContext, Suspense } from 'react';
 import { unstable_createResource as createResource } from 'react-cache';
+import Navbar from './Navbar';
+import Spinner from './Spinner';
 
 const PokemonCollectionResource = createResource(() =>
-  fetch('https://pokeapi.co/api/v2/pokemon/').then(res => res.json())
+  fetch('https://pokeapi.co/api/v2/pokemon?offset=0&limit=151').then(res =>
+    res.json()
+  )
 );
 
 const PokemonPictureResource = createResource;
@@ -16,8 +20,8 @@ function PokemonListItem({ id, name, onClick }) {
       <img
         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
         alt={name}
-        width='128'
-        height='128'
+        width='110'
+        height='110'
         style={{ imageRendering: 'pixelated' }}
       />
       <div className='pokemon-list-item__number'>{`#${id}`}</div>
@@ -29,15 +33,20 @@ function PokemonListItem({ id, name, onClick }) {
 function PokemonList(props) {
   const pokemonArray = PokemonCollectionResource.read().results.slice(0, 151);
   return (
-    <div className='pokemon-list'>
-      {pokemonArray.map((pokemon, index) => (
-        <PokemonListItem
-          key={pokemon.name}
-          name={pokemon.name}
-          id={index + 1}
-          onClick={props.onPokemonClick}
-        />
-      ))}
+    <div className='page-container--list'>
+      <div className='card'>
+        <div className='card-title'>Kanto Pokdex</div>
+        <div className='pokemon-list'>
+          {pokemonArray.map((pokemon, index) => (
+            <PokemonListItem
+              key={pokemon.name}
+              name={pokemon.name}
+              id={index + 1}
+              onClick={props.onPokemonClick}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

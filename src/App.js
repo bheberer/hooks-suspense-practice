@@ -4,43 +4,28 @@ import './App.css';
 import PokemonList from './Components/PokemonList';
 // import PokemonDetail from './Components/PokemonDetail';
 import Spinner from './Components/Spinner';
+import { getTypeColor } from './utils';
 
 const PokemonDetail = React.lazy(() => import('./Components/PokemonDetail'));
 
-function NavBar({ selectedPokemon, setSelectedPokemon }) {
-  return (
-    <div className='navbar'>
-      {selectedPokemon ? (
-        <div
-          className='nav-bar__back-button'
-          onClick={() => setSelectedPokemon(null)}
-        >
-          &#x279C;
-        </div>
-      ) : (
-        undefined
-      )}
-      <div className='nav-bar__title'>National Pokedex</div>
-    </div>
-  );
-}
-
 function App() {
   const [selectedPokemon, setSelectedPokemon] = useState();
+  console.log(selectedPokemon);
 
   return (
-    <div className='App'>
-      <NavBar
-        selectedPokemon={selectedPokemon}
-        setSelectedPokemon={setSelectedPokemon}
-      />
-      <React.Suspense fallback={<Spinner />}>
-        {selectedPokemon ? (
-          <PokemonDetail pokemon={selectedPokemon} />
-        ) : (
+    <div>
+      {selectedPokemon ? (
+        <React.Suspense fallback={<Spinner />}>
+          <PokemonDetail
+            pokemon={selectedPokemon}
+            setSelectedPokemon={setSelectedPokemon}
+          />
+        </React.Suspense>
+      ) : (
+        <React.Suspense fallback={<Spinner />} maxDuration={500}>
           <PokemonList onPokemonClick={setSelectedPokemon} />
-        )}
-      </React.Suspense>
+        </React.Suspense>
+      )}
     </div>
   );
 }
