@@ -35,7 +35,7 @@ function PokemonList(props) {
   return (
     <div className='page-container--list'>
       <div className='card'>
-        <div className='card-title'>Kanto Pokdex</div>
+        <div className='card-title'>Kanto Pokedex</div>
         <div className='pokemon-list'>
           {pokemonArray.map((pokemon, index) => (
             <PokemonListItem
